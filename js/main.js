@@ -6,6 +6,7 @@ let resolution = 40
 function setup() {
     // createCanvas(windowWidth, windowHeight);
     createCanvas(400, 400);
+    frameRate(2)
     cols = width / resolution;
     rows = height / resolution;
     grid = new Grid(cols, rows)
@@ -16,8 +17,8 @@ function setup() {
 
 function draw() {
     background(0)
-    let next = nj.zeros([cols, rows])
     grid.display(resolution)
+    grid.step()
 }
 
 function windowResized() {

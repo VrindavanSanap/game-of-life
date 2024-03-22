@@ -1,17 +1,4 @@
-function convolve(input, kernel) {
-    let ix = input.shape[0];
-    let iy = input.shape[1];
-    let kx = kernel.shape[0];
-    let ky = kernel.shape[1];
-    let padded_input = nj.zeros([ix + (kx - 1) * 2, iy + (ky - 1) * 2]);
 
-    // Padding input
-    padded_input.slice([kx - 1, kx - 1 + ix], [ky - 1, ky - 1 + iy]).assign(input, false)
-    // console.log(padded_input.toString())
-    let out = nj.convolve(padded_input, kernel);
-
-    return out;
-}
 class Grid {
     constructor(cols, rows) {
         self.cols = cols
@@ -23,6 +10,7 @@ class Grid {
                 self.grid.set(i, j, floor(random(2)))
             }
         }
+        self.next = self.grid.clone()
     }
 
     display(resolution) {
@@ -35,6 +23,31 @@ class Grid {
                 }
             }
         }
+    }
+
+    step() {
+        let kernel = nj.ones([3, 3])
+        let conv_prod = conv2d(self.grid, kernel).slice([1, -1], [1, -1])
+        let n_neibours = conv_prod.subtract(self.grid)
+        console.log(n_neibours.toString())
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                // self.grid.set(i, j, floor(random(2)))
+                let n_neibours_i = n_neibours.get(i, j);
+                if (n_neibours_i < 2) {
+                    self.next.set(i, j, 0)
+                }
+                else if (n_neibours_i >= 4) {
+                    self.next.set(i, j, 0)
+                }
+
+                else if (n_neibours_i == 3) {
+                    self.next.set(i, j, 1)
+                }
+            }
+        }
+        console.log(self.next.toString())
+        self.grid = self.next.clone()
     }
 
 }
