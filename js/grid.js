@@ -1,53 +1,63 @@
-
 class Grid {
-    constructor(cols, rows) {
-        self.cols = cols
-        self.rows = rows
-        self.grid = nj.zeros([cols, rows])
+    constructor(rows, cols) {
+        this.cols = cols;
+        this.rows = rows;
+        this.grid = nj.zeros([rows, cols]);
 
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                self.grid.set(i, j, floor(random(2)))
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                this.grid.set(i, j, Math.floor(Math.random() * 2));
             }
         }
-        self.next = self.grid.clone()
+        this.next = this.grid.clone();
     }
 
     display(resolution) {
-        for (let i = 0; i < self.cols; i++) {
-            for (let j = 0; j < self.rows; j++) {
-                let x = i * resolution
-                let y = j * resolution
-                if (self.grid.get(i, j)) {
-                    rect(x, y, resolution, resolution)
+        fill(255);
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                let x = j * resolution;
+                let y = i * resolution;
+                if (this.grid.get(i, j)) {
+                    rect(x, y, resolution, resolution);
                 }
             }
         }
+    }
+
+    highlight(row, col, resolution) {
+        let x = col * resolution;
+        let y = row * resolution;
+        fill(0, 0, 0, 0);
+        stroke(255);
+        rect(x, y, resolution, resolution);
     }
 
     step() {
-        let kernel = nj.ones([3, 3])
-        let conv_prod = conv2d(self.grid, kernel).slice([1, -1], [1, -1])
-        let n_neibours = conv_prod.subtract(self.grid)
-        console.log(n_neibours.toString())
-        for (let i = 0; i < cols; i++) {
-            for (let j = 0; j < rows; j++) {
-                // self.grid.set(i, j, floor(random(2)))
+        let kernel = nj.ones([3, 3]);
+        let conv_prod = conv2d(this.grid, kernel).slice([1, -1], [1, -1]);
+        let n_neibours = conv_prod.subtract(this.grid);
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
                 let n_neibours_i = n_neibours.get(i, j);
-                if (n_neibours_i < 2) {
-                    self.next.set(i, j, 0)
-                }
-                else if (n_neibours_i >= 4) {
-                    self.next.set(i, j, 0)
-                }
-
-                else if (n_neibours_i == 3) {
-                    self.next.set(i, j, 1)
+                if (n_neibours_i < 2 || n_neibours_i >= 4) {
+                    this.next.set(i, j, 0);
+                } else if (n_neibours_i === 3) {
+                    this.next.set(i, j, 1);
                 }
             }
         }
-        console.log(self.next.toString())
-        self.grid = self.next.clone()
+        this.grid = this.next.clone();
     }
 
+    flip(row, col) {
+        if (this.grid.get(row, col) === 1) {
+            this.grid.set(row, col, 0);
+        } else if (this.grid.get(row, col) === 0) {
+            this.grid.set(row, col, 1);
+        }
+    }
+    reset() {
+        this.grid = nj.zeros([this.rows, this.cols])
+    }
 }
