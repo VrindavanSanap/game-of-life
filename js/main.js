@@ -1,7 +1,7 @@
 let grid;
 let cols;
 let rows;
-let resolution = 10;
+let resolution = 2;
 let mouse_col;
 let mouse_row;
 let last_clicked_row;
@@ -10,7 +10,7 @@ let last_clicked_col;
 let is_running = true;
 
 function setup() {
-    createCanvas(400, 400);
+    createCanvas(1600, 800);
     frameRate(10);
     cols = width / resolution;
     rows = height / resolution;
