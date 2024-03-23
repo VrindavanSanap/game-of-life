@@ -15,14 +15,23 @@ function setup() {
     cols = width / resolution;
     rows = height / resolution;
     grid = new Grid(rows, cols);
+    nj.config.printThreshold = 100;
 }
 
 function keyPressed() {
-    if (key === "s") {
+    if (key === "p") {
         is_running = !is_running;
+        console.clear()
+
+    }
+    if (key === "s") {
+        grid.step()
+
     }
     if (key === "r") {
         grid.reset();
+        console.clear()
+
     }
 }
 

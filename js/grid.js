@@ -37,6 +37,7 @@ class Grid {
         let kernel = nj.ones([3, 3]);
         let conv_prod = conv2d(this.grid, kernel).slice([1, -1], [1, -1]);
         let n_neibours = conv_prod.subtract(this.grid);
+
         for (let i = 0; i < this.rows; i++) {
             for (let j = 0; j < this.cols; j++) {
                 let n_neibours_i = n_neibours.get(i, j);
@@ -53,8 +54,10 @@ class Grid {
     flip(row, col) {
         if (this.grid.get(row, col) === 1) {
             this.grid.set(row, col, 0);
+            this.next = this.grid.clone();
         } else if (this.grid.get(row, col) === 0) {
             this.grid.set(row, col, 1);
+            this.next = this.grid.clone();
         }
     }
     reset() {
