@@ -42,7 +42,7 @@ function draw() {
 
     grid.display(resolution);
     if (mouse_row < rows && mouse_col < cols) {
-        grid.highlight(mouse_row, mouse_col);
+        grid.highlight(mouse_row, mouse_col, resolution);
     }
     if (is_running) {
         grid.step();
